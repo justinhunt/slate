@@ -2,10 +2,6 @@
 title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
@@ -19,221 +15,266 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Cloud Poodll is a single javascript file that will load Poodll audio or video recorders into html divs on the page. Cloud Poodll has no dependencies. It works within or without an AMD module.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+[Poodll](https://poodll.com) is a set of language learning tools for teachers and learners, that was developed for the [Moodle](https://moodle.org) platform. With Cloud Poodll educators and interested people can embed Poodll anywhere they like!
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+# Loading
 
-# Authentication
+## Basic loading
 
-> To authorize, use this code:
+> Javascript library include:
+> (between head tags)
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+```html
+<script src="https://cdn.jsdelivr.net/gh/justinhunt/cloudpoodll@1.1.0/amd/build/cloudpoodll.min.js"
+type="text/javascript"></script>
 ```
 
-```python
-import kittn
+> Placeholder div:
+> (between body tags)
 
-api = kittn.authorize('meowmeowmeow')
+```html
+<div class=”cloudpoodll”></div>
 ```
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+> Javascript initiation code:
+> (before closing body tag)
+
+```html
+<script type="text/javascript">
+   CloudPoodll.autoCreateRecorders();
+   CloudPoodll.initEvents();
+</script>
 ```
+
+By default Cloud Poodll will look for elements of class "cloudpoodll" and swap them out for Poodll recorders. To load Cloud Poodll on a page, you will need to perform three steps.
+
+* Include Cloud Poodll
+* Set a placeholder
+* Load the recorder
+
+### Include Cloud Poodll
+
+At the top of the page, in between the head tags, you will need to load the Cloud Poodll library.
+The easiest way to do that is to load it from CDN:
+
+`https://cdn.jsdelivr.net/gh/justinhunt/cloudpoodll@1.1.0/amd/build/cloudpoodll.min.js`
+
+But its also possible to host the file yourself. Its available at:
+
+[https://github.com/justinhunt/cloudpoodll](https://github.com/justinhunt/cloudpoodll)
+
+### Set a placeholder
+
+Wherever you want the recorder to appear on the page, you set a placeholder element in html. Probably this will be a div element. But it could be something else.
+Via the id or class name of the element, Cloud Poodll will detect it and insert a recorder into that element.
+
+`<div class=”cloudpoodll”></div>`
+
+### Load the recorder
+
+Cloud Poodll will not load the recorder(s) until explicitly told to do so. Its pretty easy though, you can just call any of the helper functions:
+
+* autoCreateRecorders()
+* createRecorder()
+* insertRecorder()
+
+e.g `CloudPoodll.autoCreateRecorders();`
+
+Ultimately you will want to do more than just load the recorder. You will want to do something with the recorded file and respond to recorder events. This would be the place to set all that up too. So at this point you should also call:
+
+`CloudPoodll.initEvents();`
+
+## Using load helpers
+
+### Loading by class
 
 ```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
+   CloudPoodll.autoCreateRecorders('myrecorderclass');
 ```
 
-> Make sure to replace `meowmeowmeow` with your API key.
+You can specify your own class in place of "cloudpoodll" in the call to autoCreateRecorders. Then it will load recorders into any element of that class. If you do not pass in a class name to the function, then it will assume it should be looking for 'cloudpoodll'
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+### Loading by id
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+```javascript
+  CloudPoodll.createRecorder('myrecorderid');
+```
 
-`Authorization: meowmeowmeow`
+You can pass in the DOM id of an element to the createRecorder function and it will load a recorder into that div only.
 
+### Loading in javascript
+
+```javascript
+  var container = document.getElementById('myrecorderid');
+  var attributes = {"media": "audio","width": 450,"height": 350};
+  CloudPoodll.insertRecorder(container,attributes);
+```
+
+You can pass in the DOM element (container) and a map of attributes to the insertRecorder function and it will create the recorder accordingly. The attributes that you can pass in are [described later in this page](#parameters).
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+Note that the name of the attribute declared in the map to the insertRecorder function, is different to the name of the attribute set on the container element. The container element takes data-[parameter name], but the map takes simply [parameter name].
 </aside>
 
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
+### Loading from an AMD module
 
 ```javascript
-const kittn = require('kittn');
+ define('mycoolmodule',['jquery','https://cdn.jsdelivr.net/gh/justinhunt/cloudpoodll@1.1.0/amd/build/cloudpoodll.min.js'], function($,CloudPoodll){
+    return function(opts){
+      CloudPoodll.createRecorder('myrecorderid');
 
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+      CloudPoodll.theCallback = function(message){
+         alert('got message: check console');
+         console.log(message);
+      };
+
+      CloudPoodll.initEvents();
+    };
+  });
 ```
 
-> The above command returns JSON structured like this:
+Cloud Poodll can work from within an AMD module. Either from CDN directly or from your own project. It will automatically detect require.js , and if present will try to join in nicely.
+
+# Configuration
+
+The simplest way to configure the Cloud Poodll recorders is via data-xxxx attributes on the container element. The Cloud Poodll loaders will pick those up and pass them as parameters to Cloud Poodll to configure the recorder and its behaviour.  Defaults are in place for each of the attribute/parameters. So you should omit ones that you are not interested in.
+
+
+
+## <a name="parameters"></a>Parameters
+> If setting parameters on container element
+
+```html
+<div class="cloudpoodll" data-id="recorder1" data-parent="https://www.mycoolsite.com"
+data-media="audio" data-type="bmr" data-width="450" data-height="350"
+data-iframeclass="letsberesponsive" data-updatecontrol="someformfieldid" data-timelimit="5"
+data-transcode="yes" data-transcribe="no" data-transcribelanguage="en"
+data-expiredays="365"></div>
+```
+
+> If setting parameters as a map
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{"id": "recorder1", "parent": "https://www.mycoolsite.com", "media": "audio",
+"type": "bmr", "width": 450, "height": 350, "iframeclass": "letsberesponsive",
+"updatecontrol": "someformfieldid", "timelimit": 5, "transcode": "yes",
+"transcribe": "no", "transcribelanguage": "en", "expiredays": 365}
 ```
 
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
 
 Parameter | Default | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+data-id | '' | A value passed in by the integrator, that is not used by Poodll. We simply pass it back out again with events. Its role is to allow the integrator’s callback javascript to know which recorder on the page the event occurred on.
+data-parent | URL of current page | The domain of the parent hosting the recorder iframe. We use this internally to ensure the parent is licensed by us to host a recorder.
+data-media | 'audio' | The type of media being recorded. Either 'audio' or 'video'
+data-type | 'bmr' | The skin name of the recorder. Try ‘bmr’, or ‘onetwothree’
+data-width | 450 | The width in pixels of the iframe. Ignored if parameter iframeclass is set.
+data-height | 350 | The height in pixels of the iframe. Ignored if parameter iframeclass is set.
+data-iframeclass | '' | The class that will be applied to the iframe. You would use this to create a [responsive iframe.](https://blog.theodo.fr/2018/01/responsive-iframes-css-trick)
+data-updatecontrol | '' | The DOM id of a form control on the page (probably type ‘hidden’ or ‘text’). When a recording is saved successfully, and when data-inputcontrol is set, Poodll will set the URL of the recorded file as the value on the control. NB The updatecontrol parameter will be ignored if you have registered a callback function to handle [Cloud Poodll events](#events).
+data-timelimit | 0 | If set this will set the number of seconds available for recording.
+data-transcode | 'yes' | If set to yes, Cloud Poodll will transcode audio to MP3 and video to MP4 for you. Any non 'yes' value means 'no.'
+data-transcribe | 'no' | If set to yes, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll [transcriptioncomplete event](#transcriptioncomplete).
+data-transcribelanguage | 'en' | If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. Possible values are "en" and "es" (ie English or Spanish).
+data-expiredays | 365 | Sets the number of days for which Cloud Poodll will keep your file. Possible values are 1, 3, 7, 30, 90, 180, 365, 730, 9999. 9999 means Cloud Poodll will never automatically delete your file.
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+
+# <a name="events"></a>Events
+
+Having audio and video recorders on your site is a lot of fun. But it usually won't make sense unless you do something with the recordings, or react in some way to a recording.
+So we have events. The events that you get are:
+
+* awaitingconversion
+* filesubmitted
+* transcriptioncomplete
+
+Event | Description
+--------- | ---------
+awaitingconversion | Shorter recordings are converted in a jiffy. But longer ones can take a bit more. You may want to keep your users calm with some indication that you are working on things. Cloud Poodll checks regularly for the arrival of the recorded file in the designated S3 folder. Until the file arrives, each check will be responded to by a 403 error. The user will be unaware of this, but you may see this in the browser console. When conversion is complete, the filesubmitted event alerts you.
+filesubmitted | When your recording is uploaded and converted, the filesubmitted event fires. It carries with it the information that you need about filenames and URLs.
+transactioncomplete | After your recording is uploaded and converted, and if you have set data-transcribe to yes, then Cloud Poodll will post your file for transcription. The result of that arrives in this event.
+
+## Callback
+
+```javascript
+CloudPoodll.theCallback=function(thedata){
+    console.log(thedata);
+};
+```
+
+CloudPoodll allows you to register a single callback function to handle recording events. When any of the [events](#events) described above fire, your callback function will be called and the event data will be passed to it.
+To register your callback function simply set it as the value of the CloudPoodll.theCallback property.
+e.g
+
+`CloudPoodll.theCallback=function(thedata){
+    console.log(thedata);
+};`
+
+<aside class="notice">
+Note that for your events to fire, you must initiate them by calling: CloudPoodll.initEvents();
 </aside>
 
-## Get a Specific Kitten
+## Event data
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
+> A sample event handler
 
 ```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+CloudPoodll.theCallback=function(thedata){
+    console.log(thedata);
+    switch (thedata.type){
+        case 'awaitingconversion':
+            alert('awaitingconversion:' + thedata.s3root + thedata.s3filename);
+            break;
+        case 'filesubmitted':
+            alert('filesubmitted:' + thedata.shorturl);
+            break;
+        case 'transcriptioncomplete':
+            alert('transcriptioncomplete:' + thedata.transcription);
+            break;
+    }
+};
 ```
 
-> The above command returns JSON structured like this:
+Each of the [events](#events) described above returns a data payload to your callback function. The data contained in each event's data payload is explained in the table below.
 
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
+### awaitingconversion
 
-This endpoint retrieves a specific kitten.
+Name | Description
+--------- | ---------
+type | 'awaitingconversion'
+id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
+shorturl | This is the URL of the recorded file that you would save, or load into a player. e.g https://file.poodll.com/abcde.mp3
+shortfilename | This is the filename part of the shorturl. e.g abcde.mp3
+s3filename | This is the filename of the file in S3 storage. Its quite long.
+s3root | This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.
+updatecontrol | This is the DOM id of the updatecontrol element that the recorder was initialised with.
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+### filesubmitted
 
-### HTTP Request
+Name | Description
+--------- | ---------
+type | 'filesubmitted'
+id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
+shorturl | This is the URL of the recorded file that you would save, or load into a player. e.g https://file.poodll.com/abcde.mp3
+shortfilename | This is the filename part of the shorturl. e.g abcde.mp3
+s3filename | This is the filename of the file in S3 storage. Its quite long.
+s3root | This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.
+updatecontrol | This is the DOM id of the updatecontrol element that the recorder was initialised with.
 
-`GET http://example.com/kittens/<ID>`
+### transcriptioncomplete
 
-### URL Parameters
+Name | Description
+--------- | ---------
+type | 'transcriptioncomplete'
+id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
+shorturl | This is the URL of the recorded file that you would save, or load into a player. e.g https://file.poodll.com/abcde.mp3
+shortfilename | This is the filename part of the shorturl. e.g abcde.mp3
+s3filename | This is the filename of the file in S3 storage. Its quite long.
+s3root | This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.
+updatecontrol | This is the DOM id of the updatecontrol element that the recorder was initialised with.
+language | This is the language that was transcribed. Either 'en' or 'es' (English or Spanish)
+transcription | This is the text that was transcribed.
+confidence | This is a numerical confidence score of the transcription accuracy.
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
 
