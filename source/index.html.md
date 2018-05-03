@@ -26,7 +26,7 @@ Cloud Poodll is a single javascript file that will load Poodll audio or video re
 > (between head tags)
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/justinhunt/cloudpoodll@1.1.0/amd/build/cloudpoodll.min.js"
+<script src="https://cdn.jsdelivr.net/gh/justinhunt/cloudpoodll@latest/amd/build/cloudpoodll.min.js"
 type="text/javascript"></script>
 ```
 
@@ -58,7 +58,7 @@ By default Cloud Poodll will look for elements of class "cloudpoodll" and swap t
 At the top of the page, in between the head tags, you will need to load the Cloud Poodll library.
 The easiest way to do that is to load it from CDN:
 
-`https://cdn.jsdelivr.net/gh/justinhunt/cloudpoodll@1.1.0/amd/build/cloudpoodll.min.js`
+`https://cdn.jsdelivr.net/gh/justinhunt/cloudpoodll@latest/amd/build/cloudpoodll.min.js`
 
 But its also possible to host the file yourself. Its available at:
 
