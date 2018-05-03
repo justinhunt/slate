@@ -198,7 +198,7 @@
     </style>
     <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
     <link href="stylesheets/print.css" rel="stylesheet" media="print" />
-      <script src="javascripts/all.js"></script>
+      <script src="javascripts/all_nosearch.js"></script>
     <link href="images/images/favicon.png" rel="icon" type="image/png" />
   </head>
 
@@ -211,10 +211,6 @@
     </a>
     <div class="toc-wrapper">
       <img src="images/logo.png" class="logo" alt="Logo" />
-        <div class="search">
-          <input type="text" class="search" id="input-search" placeholder="Search">
-        </div>
-        <ul class="search-results"></ul>
       <div id="toc" class="toc-list-h1">
           <li>
             <a href="#introduction" class="toc-h1 toc-link" data-title="introduction">Introduction</a>
@@ -234,12 +230,12 @@
             <a href="#configuration" class="toc-h1 toc-link" data-title="configuration">Configuration</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#parameters" class="toc-h2 toc-link" data-title="a-name-parameters-a-parameters"><a name="parameters"></a>Parameters</a>
+                    <a href="#parameters" class="toc-h2 toc-link" data-title="parameters-a-name-parameters-a">Parameters <a name="parameters"></a></a>
                   </li>
               </ul>
           </li>
           <li>
-            <a href="#events" class="toc-h1 toc-link" data-title="a-name-events-a-events"><a name="events"></a>Events</a>
+            <a href="#events" class="toc-h1 toc-link" data-title="events-a-name-events-a">Events <a name="events"></a></a>
               <ul class="toc-list-h2">
                   <li>
                     <a href="#callback" class="toc-h2 toc-link" data-title="callback">Callback</a>
@@ -249,12 +245,9 @@
                   </li>
               </ul>
           </li>
-          <li>
-            <a href="#errors" class="toc-h1 toc-link" data-title="errors">Errors</a>
-          </li>
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
+            <li><a href='https://poodll.com/contact'>ASK for beta access</a></li>
             <li><a href='https://github.com/lord/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
@@ -353,7 +346,7 @@ Note that the name of the attribute declared in the map to the insertRecorder fu
 <p>Cloud Poodll can work from within an AMD module. Either from CDN directly or from your own project. It will automatically detect require.js , and if present will try to join in nicely.</p>
 <h1 id='configuration'>Configuration</h1>
 <p>The simplest way to configure the Cloud Poodll recorders is via data-xxxx attributes on the container element. The Cloud Poodll loaders will pick those up and pass them as parameters to Cloud Poodll to configure the recorder and its behaviour.  Defaults are in place for each of the attribute/parameters. So you should omit ones that you are not interested in.</p>
-<h2 id='parameters'><a name="parameters"></a>Parameters</h2>
+<h2 id='parameters'>Parameters <a name="parameters"></a></h2>
 <blockquote>
 <p>If setting parameters on container element</p>
 </blockquote>
@@ -444,7 +437,7 @@ Note that the name of the attribute declared in the map to the insertRecorder fu
 <td>Sets the number of days for which Cloud Poodll will keep your file. Possible values are 1, 3, 7, 30, 90, 180, 365, 730, 9999. 9999 means Cloud Poodll will never automatically delete your file.</td>
 </tr>
 </tbody></table>
-<h1 id='events'><a name="events"></a>Events</h1>
+<h1 id='events'>Events <a name="events"></a></h1>
 <p>Having audio and video recorders on your site is a lot of fun. But it usually won&#39;t make sense unless you do something with the recordings, or react in some way to a recording.
 So we have events. The events that you get are:</p>
 
@@ -626,64 +619,6 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 <tr>
 <td>confidence</td>
 <td>This is a numerical confidence score of the transcription accuracy.</td>
-</tr>
-</tbody></table>
-<h1 id='errors'>Errors</h1>
-<aside class="notice">
-This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
-</aside>
-
-<p>The Kittn API uses the following error codes:</p>
-
-<table><thead>
-<tr>
-<th>Error Code</th>
-<th>Meaning</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>400</td>
-<td>Bad Request -- Your request is invalid.</td>
-</tr>
-<tr>
-<td>401</td>
-<td>Unauthorized -- Your API key is wrong.</td>
-</tr>
-<tr>
-<td>403</td>
-<td>Forbidden -- The kitten requested is hidden for administrators only.</td>
-</tr>
-<tr>
-<td>404</td>
-<td>Not Found -- The specified kitten could not be found.</td>
-</tr>
-<tr>
-<td>405</td>
-<td>Method Not Allowed -- You tried to access a kitten with an invalid method.</td>
-</tr>
-<tr>
-<td>406</td>
-<td>Not Acceptable -- You requested a format that isn&#39;t json.</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone -- The kitten requested has been removed from our servers.</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&#39;m a teapot.</td>
-</tr>
-<tr>
-<td>429</td>
-<td>Too Many Requests -- You&#39;re requesting too many kittens! Slow down!</td>
-</tr>
-<tr>
-<td>500</td>
-<td>Internal Server Error -- We had a problem with our server. Try again later.</td>
-</tr>
-<tr>
-<td>503</td>
-<td>Service Unavailable -- We&#39;re temporarily offline for maintenance. Please try again later.</td>
 </tr>
 </tbody></table>
 
