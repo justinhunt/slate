@@ -4,13 +4,12 @@ title: API Reference
 language_tabs: # must be one of https://git.io/vQNgJ
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
+  - <a href='https://poodll.com/contact'>ASK for beta access</a>
   - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - errors
 
-search: true
+search: false
 ---
 
 # Introduction
@@ -142,7 +141,7 @@ The simplest way to configure the Cloud Poodll recorders is via data-xxxx attrib
 
 
 
-## <a name="parameters"></a>Parameters
+## Parameters <a name="parameters"></a>
 > If setting parameters on container element
 
 ```html
@@ -180,7 +179,7 @@ data-transcribelanguage | 'en' | If Cloud Poodll is transcribing the audio in yo
 data-expiredays | 365 | Sets the number of days for which Cloud Poodll will keep your file. Possible values are 1, 3, 7, 30, 90, 180, 365, 730, 9999. 9999 means Cloud Poodll will never automatically delete your file.
 
 
-# <a name="events"></a>Events
+# Events <a name="events"></a>
 
 Having audio and video recorders on your site is a lot of fun. But it usually won't make sense unless you do something with the recordings, or react in some way to a recording.
 So we have events. The events that you get are:
