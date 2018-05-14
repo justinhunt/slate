@@ -148,7 +148,7 @@ The simplest way to configure the Cloud Poodll recorders is via data-xxxx attrib
 <div class="cloudpoodll" data-id="recorder1" data-parent="https://www.mycoolsite.com"
 data-media="audio" data-type="bmr" data-width="450" data-height="350"
 data-iframeclass="letsberesponsive" data-updatecontrol="someformfieldid" data-timelimit="5"
-data-transcode="yes" data-transcribe="no" data-transcribelanguage="en"
+data-transcode="1" data-transcribe="0" data-transcribelanguage="en"
 data-expiredays="365"></div>
 ```
 
@@ -157,8 +157,8 @@ data-expiredays="365"></div>
 ```json
 {"id": "recorder1", "parent": "https://www.mycoolsite.com", "media": "audio",
 "type": "bmr", "width": 450, "height": 350, "iframeclass": "letsberesponsive",
-"updatecontrol": "someformfieldid", "timelimit": 5, "transcode": "yes",
-"transcribe": "no", "transcribelanguage": "en", "expiredays": 365,
+"updatecontrol": "someformfieldid", "timelimit": 5, "transcode": 1,
+"transcribe": 0, "transcribelanguage": "en", "expiredays": 365,
 "owner":"poodll","region":"tokyo"}
 ```
 
@@ -231,7 +231,7 @@ CloudPoodll.theCallback=function(thedata){
             alert('awaitingprocessing:' + thedata.s3root + thedata.s3filename);
             break;
         case 'filesubmitted':
-            alert('filesubmitted:' + thedata.shorturl);
+            alert('filesubmitted:' + thedata.finalurl);
             break;
         case 'transcriptioncomplete':
             alert('transcriptioncomplete:' + thedata.transcription);
