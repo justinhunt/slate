@@ -158,7 +158,8 @@ data-expiredays="365"></div>
 {"id": "recorder1", "parent": "https://www.mycoolsite.com", "media": "audio",
 "type": "bmr", "width": 450, "height": 350, "iframeclass": "letsberesponsive",
 "updatecontrol": "someformfieldid", "timelimit": 5, "transcode": "yes",
-"transcribe": "no", "transcribelanguage": "en", "expiredays": 365}
+"transcribe": "no", "transcribelanguage": "en", "expiredays": 365,
+"owner":"poodll","region":"tokyo"}
 ```
 
 
@@ -177,22 +178,26 @@ data-transcode | 'yes' | If set to yes, Cloud Poodll will transcode audio to MP3
 data-transcribe | 'no' | If set to yes, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll [transcriptioncomplete event](#transcriptioncomplete).
 data-transcribelanguage | 'en' | If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. Possible values are "en" and "es" (ie English or Spanish).
 data-expiredays | 365 | Sets the number of days for which Cloud Poodll will keep your file. Possible values are 1, 3, 7, 30, 90, 180, 365, 730, 9999. 9999 means Cloud Poodll will never automatically delete your file.
-
+data-owner | 'poodll' | An identifier tag that can be used to find recordings made by a particular individual/entity. Later, delete and other operations can be made against this.
+data-region | 'tokyo' | The Amazon AWS region in which recordings should be stored. Possible values are 'tokyo','useast1','dublin','sydney'
+data-token | 'somedefaultforlocalhost' | An authorisation token that you receive from https://cloud.poodll.com. You need this to access the service. The default token authorises localhost domain only.
 
 # Events <a name="events"></a>
 
 Having audio and video recorders on your site is a lot of fun. But it usually won't make sense unless you do something with the recordings, or react in some way to a recording.
 So we have events. The events that you get are:
 
-* awaitingconversion
+* awaitingprocessing
 * filesubmitted
 * transcriptioncomplete
+* error
 
 Event | Description
 --------- | ---------
-awaitingconversion | Shorter recordings are converted in a jiffy. But longer ones can take a bit more. You may want to keep your users calm with some indication that you are working on things. Cloud Poodll checks regularly for the arrival of the recorded file in the designated S3 folder. Until the file arrives, each check will be responded to by a 403 error. The user will be unaware of this, but you may see this in the browser console. When conversion is complete, the filesubmitted event alerts you.
+awaitingprocessing | After uploaded, recordings are converted(optional), and then copied to a final destination. Shorter recordings are converted in a jiffy. But longer ones can take a bit more. You may want to keep your users calm with some indication that you are working on things. Cloud Poodll checks regularly for the arrival of the recorded file in the designated S3 folder. Until the file arrives, each check will be responded to by a 403 error. The user will be unaware of this, but you may see this in the browser console. When processing is complete, the filesubmitted event alerts you. If you do not wish to wait, the filename and destination URL is known at this stage and unless an error occurs, they can be trusted..
 filesubmitted | When your recording is uploaded and converted, the filesubmitted event fires. It carries with it the information that you need about filenames and URLs.
 transactioncomplete | After your recording is uploaded and converted, and if you have set data-transcribe to yes, then Cloud Poodll will post your file for transcription. The result of that arrives in this event.
+error | If an error occurs, Cloud Poodll will do its best to return a notification of that and a message explaining what went wrong.
 
 ## Callback
 
@@ -222,14 +227,17 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 CloudPoodll.theCallback=function(thedata){
     console.log(thedata);
     switch (thedata.type){
-        case 'awaitingconversion':
-            alert('awaitingconversion:' + thedata.s3root + thedata.s3filename);
+        case 'awaitingprocessing':
+            alert('awaitingprocessing:' + thedata.s3root + thedata.s3filename);
             break;
         case 'filesubmitted':
             alert('filesubmitted:' + thedata.shorturl);
             break;
         case 'transcriptioncomplete':
             alert('transcriptioncomplete:' + thedata.transcription);
+            break;
+        case 'error':
+            alert('Error: ' + thedata.message);
             break;
     }
 };
@@ -241,7 +249,7 @@ Each of the [events](#events) described above returns a data payload to your cal
 
 Name | Description
 --------- | ---------
-type | 'awaitingconversion'
+type | 'awaitingprocessing'
 id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
 shorturl | This is the URL of the recorded file that you would save, or load into a player. e.g https://file.poodll.com/abcde.mp3
 shortfilename | This is the filename part of the shorturl. e.g abcde.mp3
@@ -276,4 +284,12 @@ language | This is the language that was transcribed. Either 'en' or 'es' (Engli
 transcription | This is the text that was transcribed.
 confidence | This is a numerical confidence score of the transcription accuracy.
 
+### error
+
+Name | Description
+--------- | ---------
+type | 'error'
+id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
+code | A code indicating the error type. (currently the only code is '1')
+message | A message explaining what went wrong
 
