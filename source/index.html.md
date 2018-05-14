@@ -174,8 +174,8 @@ data-height | 350 | The height in pixels of the iframe. Ignored if parameter ifr
 data-iframeclass | '' | The class that will be applied to the iframe. You would use this to create a [responsive iframe.](https://blog.theodo.fr/2018/01/responsive-iframes-css-trick)
 data-updatecontrol | '' | The DOM id of a form control on the page (probably type ‘hidden’ or ‘text’). When a recording is saved successfully, and when data-inputcontrol is set, Poodll will set the URL of the recorded file as the value on the control. NB The updatecontrol parameter will be ignored if you have registered a callback function to handle [Cloud Poodll events](#events).
 data-timelimit | 0 | If set this will set the number of seconds available for recording.
-data-transcode | 1 | If set to yes, Cloud Poodll will transcode audio to MP3 and video to MP4 for you. Any non 'yes' value means 'no.'
-data-transcribe | 0 | If set to yes, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll [transcriptioncomplete event](#transcriptioncomplete).
+data-transcode | 1 | If set to 1, Cloud Poodll will transcode audio to MP3 and video to MP4 for you. 1 means yes. 0 means no.
+data-transcribe | 0 | If set to 1, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll [transcriptioncomplete event](#transcriptioncomplete).
 data-transcribelanguage | 'en' | If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. Possible values are "en" and "es" (ie English or Spanish).
 data-expiredays | 365 | Sets the number of days for which Cloud Poodll will keep your file. Possible values are 1, 3, 7, 30, 90, 180, 365, 730, 9999. 9999 means Cloud Poodll will never automatically delete your file.
 data-owner | 'poodll' | An identifier tag that can be used to find recordings made by a particular individual/entity. Later, delete and other operations can be made against this.
