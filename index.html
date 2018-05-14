@@ -380,7 +380,7 @@ Note that the name of the attribute declared in the map to the insertRecorder fu
 <tr>
 <td>data-parent</td>
 <td>URL of current page</td>
-<td>The domain of the parent hosting the recorder iframe. We use this internally to ensure the parent is licensed by us to host a recorder.</td>
+<td>The URL (as far as the domain) of the parent hosting the recorder iframe. This MUST be correct or stuff won&#39;t happen. It should start with https. Nothing will work on http sites.</td>
 </tr>
 <tr>
 <td>data-media</td>
@@ -419,12 +419,12 @@ Note that the name of the attribute declared in the map to the insertRecorder fu
 </tr>
 <tr>
 <td>data-transcode</td>
-<td>&#39;yes&#39;</td>
+<td>1</td>
 <td>If set to yes, Cloud Poodll will transcode audio to MP3 and video to MP4 for you. Any non &#39;yes&#39; value means &#39;no.&#39;</td>
 </tr>
 <tr>
 <td>data-transcribe</td>
-<td>&#39;no&#39;</td>
+<td>0</td>
 <td>If set to yes, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll <a href="#transcriptioncomplete">transcriptioncomplete event</a>.</td>
 </tr>
 <tr>
@@ -472,7 +472,7 @@ So we have events. The events that you get are:</p>
 </thead><tbody>
 <tr>
 <td>awaitingprocessing</td>
-<td>After uploaded, recordings are converted(optional), and then copied to a final destination. Shorter recordings are converted in a jiffy. But longer ones can take a bit more. You may want to keep your users calm with some indication that you are working on things. Cloud Poodll checks regularly for the arrival of the recorded file in the designated S3 folder. Until the file arrives, each check will be responded to by a 403 error. The user will be unaware of this, but you may see this in the browser console. When processing is complete, the filesubmitted event alerts you. If you do not wish to wait, the filename and destination URL is known at this stage and unless an error occurs, they can be trusted..</td>
+<td>After uploading, recordings are converted(optional), and then copied to a final destination. Use this event to do somethung while the user waits. If you do not wish to wait, the final URL is known at this stage and unless an error occurs, it can be trusted..</td>
 </tr>
 <tr>
 <td>filesubmitted</td>
@@ -541,16 +541,12 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 <td>The id of the recorder that the event originated from. This is the id you set when creating the recorder.</td>
 </tr>
 <tr>
-<td>shorturl</td>
-<td>This is the URL of the recorded file that you would save, or load into a player. e.g https://file.poodll.com/abcde.mp3</td>
-</tr>
-<tr>
-<td>shortfilename</td>
-<td>This is the filename part of the shorturl. e.g abcde.mp3</td>
+<td>finalurl</td>
+<td>The url of the recorded file</td>
 </tr>
 <tr>
 <td>s3filename</td>
-<td>This is the filename of the file in S3 storage. Its quite long.</td>
+<td>This is the filename of the file in S3 storage.</td>
 </tr>
 <tr>
 <td>s3root</td>
@@ -577,16 +573,12 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 <td>The id of the recorder that the event originated from. This is the id you set when creating the recorder.</td>
 </tr>
 <tr>
-<td>shorturl</td>
-<td>This is the URL of the recorded file that you would save, or load into a player. e.g https://file.poodll.com/abcde.mp3</td>
-</tr>
-<tr>
-<td>shortfilename</td>
-<td>This is the filename part of the shorturl. e.g abcde.mp3</td>
+<td>finalurl</td>
+<td>The url of the recorded file</td>
 </tr>
 <tr>
 <td>s3filename</td>
-<td>This is the filename of the file in S3 storage. Its quite long.</td>
+<td>This is the filename of the file in S3 storage.</td>
 </tr>
 <tr>
 <td>s3root</td>
@@ -613,16 +605,12 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 <td>The id of the recorder that the event originated from. This is the id you set when creating the recorder.</td>
 </tr>
 <tr>
-<td>shorturl</td>
-<td>This is the URL of the recorded file that you would save, or load into a player. e.g https://file.poodll.com/abcde.mp3</td>
-</tr>
-<tr>
-<td>shortfilename</td>
-<td>This is the filename part of the shorturl. e.g abcde.mp3</td>
+<td>finalurl</td>
+<td>The url of the recorded file</td>
 </tr>
 <tr>
 <td>s3filename</td>
-<td>This is the filename of the file in S3 storage. Its quite long.</td>
+<td>This is the filename of the file in S3 storage.</td>
 </tr>
 <tr>
 <td>s3root</td>
