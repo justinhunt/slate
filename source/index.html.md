@@ -149,7 +149,7 @@ The simplest way to configure the Cloud Poodll recorders is via data-xxxx attrib
 data-media="audio" data-type="bmr" data-width="450" data-height="350"
 data-iframeclass="letsberesponsive" data-updatecontrol="someformfieldid" data-timelimit="5"
 data-transcode="1" data-transcribe="0" data-transcribelanguage="en"
-data-expiredays="365"></div>
+data-expiredays="365" data-region="tokyo" data-token="12345token"></div>
 ```
 
 > If setting parameters as a map
@@ -159,7 +159,7 @@ data-expiredays="365"></div>
 "type": "bmr", "width": 450, "height": 350, "iframeclass": "letsberesponsive",
 "updatecontrol": "someformfieldid", "timelimit": 5, "transcode": 1,
 "transcribe": 0, "transcribelanguage": "en", "expiredays": 365,
-"owner":"poodll","region":"tokyo"}
+"owner":"poodll","region":"tokyo","token":"12345token"}
 ```
 
 
