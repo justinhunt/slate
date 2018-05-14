@@ -166,7 +166,7 @@ data-expiredays="365"></div>
 Parameter | Default | Description
 --------- | ------- | -----------
 data-id | '' | A value passed in by the integrator, that is not used by Poodll. We simply pass it back out again with events. Its role is to allow the integrator’s callback javascript to know which recorder on the page the event occurred on.
-data-parent | URL of current page | The domain of the parent hosting the recorder iframe. We use this internally to ensure the parent is licensed by us to host a recorder.
+data-parent | URL of current page | The URL (as far as the domain) of the parent hosting the recorder iframe. This MUST be correct or stuff won't happen. It should start with https. Nothing will work on http sites.
 data-media | 'audio' | The type of media being recorded. Either 'audio' or 'video'
 data-type | 'bmr' | The skin name of the recorder. Try ‘bmr’, or ‘onetwothree’
 data-width | 450 | The width in pixels of the iframe. Ignored if parameter iframeclass is set.
@@ -174,8 +174,8 @@ data-height | 350 | The height in pixels of the iframe. Ignored if parameter ifr
 data-iframeclass | '' | The class that will be applied to the iframe. You would use this to create a [responsive iframe.](https://blog.theodo.fr/2018/01/responsive-iframes-css-trick)
 data-updatecontrol | '' | The DOM id of a form control on the page (probably type ‘hidden’ or ‘text’). When a recording is saved successfully, and when data-inputcontrol is set, Poodll will set the URL of the recorded file as the value on the control. NB The updatecontrol parameter will be ignored if you have registered a callback function to handle [Cloud Poodll events](#events).
 data-timelimit | 0 | If set this will set the number of seconds available for recording.
-data-transcode | 'yes' | If set to yes, Cloud Poodll will transcode audio to MP3 and video to MP4 for you. Any non 'yes' value means 'no.'
-data-transcribe | 'no' | If set to yes, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll [transcriptioncomplete event](#transcriptioncomplete).
+data-transcode | 1 | If set to yes, Cloud Poodll will transcode audio to MP3 and video to MP4 for you. Any non 'yes' value means 'no.'
+data-transcribe | 0 | If set to yes, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll [transcriptioncomplete event](#transcriptioncomplete).
 data-transcribelanguage | 'en' | If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. Possible values are "en" and "es" (ie English or Spanish).
 data-expiredays | 365 | Sets the number of days for which Cloud Poodll will keep your file. Possible values are 1, 3, 7, 30, 90, 180, 365, 730, 9999. 9999 means Cloud Poodll will never automatically delete your file.
 data-owner | 'poodll' | An identifier tag that can be used to find recordings made by a particular individual/entity. Later, delete and other operations can be made against this.
@@ -194,7 +194,7 @@ So we have events. The events that you get are:
 
 Event | Description
 --------- | ---------
-awaitingprocessing | After uploaded, recordings are converted(optional), and then copied to a final destination. Shorter recordings are converted in a jiffy. But longer ones can take a bit more. You may want to keep your users calm with some indication that you are working on things. Cloud Poodll checks regularly for the arrival of the recorded file in the designated S3 folder. Until the file arrives, each check will be responded to by a 403 error. The user will be unaware of this, but you may see this in the browser console. When processing is complete, the filesubmitted event alerts you. If you do not wish to wait, the filename and destination URL is known at this stage and unless an error occurs, they can be trusted..
+awaitingprocessing | After uploading, recordings are converted(optional), and then copied to a final destination. Use this event to do somethung while the user waits. If you do not wish to wait, the final URL is known at this stage and unless an error occurs, it can be trusted..
 filesubmitted | When your recording is uploaded and converted, the filesubmitted event fires. It carries with it the information that you need about filenames and URLs.
 transactioncomplete | After your recording is uploaded and converted, and if you have set data-transcribe to yes, then Cloud Poodll will post your file for transcription. The result of that arrives in this event.
 error | If an error occurs, Cloud Poodll will do its best to return a notification of that and a message explaining what went wrong.
@@ -251,9 +251,8 @@ Name | Description
 --------- | ---------
 type | 'awaitingprocessing'
 id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
-shorturl | This is the URL of the recorded file that you would save, or load into a player. e.g https://file.poodll.com/abcde.mp3
-shortfilename | This is the filename part of the shorturl. e.g abcde.mp3
-s3filename | This is the filename of the file in S3 storage. Its quite long.
+finalurl | The url of the recorded file 
+s3filename | This is the filename of the file in S3 storage. 
 s3root | This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.
 updatecontrol | This is the DOM id of the updatecontrol element that the recorder was initialised with.
 
@@ -263,9 +262,8 @@ Name | Description
 --------- | ---------
 type | 'filesubmitted'
 id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
-shorturl | This is the URL of the recorded file that you would save, or load into a player. e.g https://file.poodll.com/abcde.mp3
-shortfilename | This is the filename part of the shorturl. e.g abcde.mp3
-s3filename | This is the filename of the file in S3 storage. Its quite long.
+finalurl | The url of the recorded file 
+s3filename | This is the filename of the file in S3 storage. 
 s3root | This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.
 updatecontrol | This is the DOM id of the updatecontrol element that the recorder was initialised with.
 
@@ -275,9 +273,8 @@ Name | Description
 --------- | ---------
 type | 'transcriptioncomplete'
 id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
-shorturl | This is the URL of the recorded file that you would save, or load into a player. e.g https://file.poodll.com/abcde.mp3
-shortfilename | This is the filename part of the shorturl. e.g abcde.mp3
-s3filename | This is the filename of the file in S3 storage. Its quite long.
+finalurl | The url of the recorded file 
+s3filename | This is the filename of the file in S3 storage. 
 s3root | This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.
 updatecontrol | This is the DOM id of the updatecontrol element that the recorder was initialised with.
 language | This is the language that was transcribed. Either 'en' or 'es' (English or Spanish)
