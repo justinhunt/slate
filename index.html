@@ -199,7 +199,7 @@
     <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
     <link href="stylesheets/print.css" rel="stylesheet" media="print" />
       <script src="javascripts/all_nosearch.js"></script>
-    <link href="images/images/favicon.png" rel="icon" type="image/png" />
+    <link href="images/favicon.png" rel="icon" type="image/png" />
   </head>
 
   <body class="index" data-languages="[]">
@@ -362,7 +362,8 @@ Note that the name of the attribute declared in the map to the insertRecorder fu
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"recorder1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"parent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.mycoolsite.com"</span><span class="p">,</span><span class="w"> </span><span class="s2">"media"</span><span class="p">:</span><span class="w"> </span><span class="s2">"audio"</span><span class="p">,</span><span class="w">
 </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bmr"</span><span class="p">,</span><span class="w"> </span><span class="s2">"width"</span><span class="p">:</span><span class="w"> </span><span class="mi">450</span><span class="p">,</span><span class="w"> </span><span class="s2">"height"</span><span class="p">:</span><span class="w"> </span><span class="mi">350</span><span class="p">,</span><span class="w"> </span><span class="s2">"iframeclass"</span><span class="p">:</span><span class="w"> </span><span class="s2">"letsberesponsive"</span><span class="p">,</span><span class="w">
 </span><span class="s2">"updatecontrol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"someformfieldid"</span><span class="p">,</span><span class="w"> </span><span class="s2">"timelimit"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s2">"transcode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
-</span><span class="s2">"transcribe"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="p">,</span><span class="w"> </span><span class="s2">"transcribelanguage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w"> </span><span class="s2">"expiredays"</span><span class="p">:</span><span class="w"> </span><span class="mi">365</span><span class="p">}</span><span class="w">
+</span><span class="s2">"transcribe"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="p">,</span><span class="w"> </span><span class="s2">"transcribelanguage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w"> </span><span class="s2">"expiredays"</span><span class="p">:</span><span class="w"> </span><span class="mi">365</span><span class="p">,</span><span class="w">
+</span><span class="s2">"owner"</span><span class="p">:</span><span class="s2">"poodll"</span><span class="p">,</span><span class="s2">"region"</span><span class="p">:</span><span class="s2">"tokyo"</span><span class="p">}</span><span class="w">
 </span></code></pre>
 <table><thead>
 <tr>
@@ -436,15 +437,31 @@ Note that the name of the attribute declared in the map to the insertRecorder fu
 <td>365</td>
 <td>Sets the number of days for which Cloud Poodll will keep your file. Possible values are 1, 3, 7, 30, 90, 180, 365, 730, 9999. 9999 means Cloud Poodll will never automatically delete your file.</td>
 </tr>
+<tr>
+<td>data-owner</td>
+<td>&#39;poodll&#39;</td>
+<td>An identifier tag that can be used to find recordings made by a particular individual/entity. Later, delete and other operations can be made against this.</td>
+</tr>
+<tr>
+<td>data-region</td>
+<td>&#39;tokyo&#39;</td>
+<td>The Amazon AWS region in which recordings should be stored. Possible values are &#39;tokyo&#39;,&#39;useast1&#39;,&#39;dublin&#39;,&#39;sydney&#39;</td>
+</tr>
+<tr>
+<td>data-token</td>
+<td>&#39;somedefaultforlocalhost&#39;</td>
+<td>An authorisation token that you receive from https://cloud.poodll.com. You need this to access the service. The default token authorises localhost domain only.</td>
+</tr>
 </tbody></table>
 <h1 id='events'>Events <a name="events"></a></h1>
 <p>Having audio and video recorders on your site is a lot of fun. But it usually won&#39;t make sense unless you do something with the recordings, or react in some way to a recording.
 So we have events. The events that you get are:</p>
 
 <ul>
-<li>awaitingconversion</li>
+<li>awaitingprocessing</li>
 <li>filesubmitted</li>
 <li>transcriptioncomplete</li>
+<li>error</li>
 </ul>
 
 <table><thead>
@@ -454,8 +471,8 @@ So we have events. The events that you get are:</p>
 </tr>
 </thead><tbody>
 <tr>
-<td>awaitingconversion</td>
-<td>Shorter recordings are converted in a jiffy. But longer ones can take a bit more. You may want to keep your users calm with some indication that you are working on things. Cloud Poodll checks regularly for the arrival of the recorded file in the designated S3 folder. Until the file arrives, each check will be responded to by a 403 error. The user will be unaware of this, but you may see this in the browser console. When conversion is complete, the filesubmitted event alerts you.</td>
+<td>awaitingprocessing</td>
+<td>After uploaded, recordings are converted(optional), and then copied to a final destination. Shorter recordings are converted in a jiffy. But longer ones can take a bit more. You may want to keep your users calm with some indication that you are working on things. Cloud Poodll checks regularly for the arrival of the recorded file in the designated S3 folder. Until the file arrives, each check will be responded to by a 403 error. The user will be unaware of this, but you may see this in the browser console. When processing is complete, the filesubmitted event alerts you. If you do not wish to wait, the filename and destination URL is known at this stage and unless an error occurs, they can be trusted..</td>
 </tr>
 <tr>
 <td>filesubmitted</td>
@@ -464,6 +481,10 @@ So we have events. The events that you get are:</p>
 <tr>
 <td>transactioncomplete</td>
 <td>After your recording is uploaded and converted, and if you have set data-transcribe to yes, then Cloud Poodll will post your file for transcription. The result of that arrives in this event.</td>
+</tr>
+<tr>
+<td>error</td>
+<td>If an error occurs, Cloud Poodll will do its best to return a notification of that and a message explaining what went wrong.</td>
 </tr>
 </tbody></table>
 <h2 id='callback'>Callback</h2><pre class="highlight javascript tab-javascript"><code><span class="nx">CloudPoodll</span><span class="p">.</span><span class="nx">theCallback</span><span class="o">=</span><span class="kd">function</span><span class="p">(</span><span class="nx">thedata</span><span class="p">){</span>
@@ -488,14 +509,17 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 <pre class="highlight javascript tab-javascript"><code><span class="nx">CloudPoodll</span><span class="p">.</span><span class="nx">theCallback</span><span class="o">=</span><span class="kd">function</span><span class="p">(</span><span class="nx">thedata</span><span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">thedata</span><span class="p">);</span>
     <span class="k">switch</span> <span class="p">(</span><span class="nx">thedata</span><span class="p">.</span><span class="nx">type</span><span class="p">){</span>
-        <span class="k">case</span> <span class="s1">'awaitingconversion'</span><span class="p">:</span>
-            <span class="nx">alert</span><span class="p">(</span><span class="s1">'awaitingconversion:'</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">s3root</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">s3filename</span><span class="p">);</span>
+        <span class="k">case</span> <span class="s1">'awaitingprocessing'</span><span class="p">:</span>
+            <span class="nx">alert</span><span class="p">(</span><span class="s1">'awaitingprocessing:'</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">s3root</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">s3filename</span><span class="p">);</span>
             <span class="k">break</span><span class="p">;</span>
         <span class="k">case</span> <span class="s1">'filesubmitted'</span><span class="p">:</span>
             <span class="nx">alert</span><span class="p">(</span><span class="s1">'filesubmitted:'</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">shorturl</span><span class="p">);</span>
             <span class="k">break</span><span class="p">;</span>
         <span class="k">case</span> <span class="s1">'transcriptioncomplete'</span><span class="p">:</span>
             <span class="nx">alert</span><span class="p">(</span><span class="s1">'transcriptioncomplete:'</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">transcription</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s1">'error'</span><span class="p">:</span>
+            <span class="nx">alert</span><span class="p">(</span><span class="s1">'Error: '</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
             <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">};</span>
@@ -510,7 +534,7 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 </thead><tbody>
 <tr>
 <td>type</td>
-<td>&#39;awaitingconversion&#39;</td>
+<td>&#39;awaitingprocessing&#39;</td>
 </tr>
 <tr>
 <td>id</td>
@@ -619,6 +643,30 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 <tr>
 <td>confidence</td>
 <td>This is a numerical confidence score of the transcription accuracy.</td>
+</tr>
+</tbody></table>
+<h3 id='error'>error</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>&#39;error&#39;</td>
+</tr>
+<tr>
+<td>id</td>
+<td>The id of the recorder that the event originated from. This is the id you set when creating the recorder.</td>
+</tr>
+<tr>
+<td>code</td>
+<td>A code indicating the error type. (currently the only code is &#39;1&#39;)</td>
+</tr>
+<tr>
+<td>message</td>
+<td>A message explaining what went wrong</td>
 </tr>
 </tbody></table>
 
