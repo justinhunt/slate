@@ -151,7 +151,9 @@ Cloud Poodll can work from within an AMD module. Either from CDN directly or fro
 The simplest way to configure the Cloud Poodll recorders is via data-xxxx attributes on the container element. The Cloud Poodll loaders will pick those up and pass them as parameters to Cloud Poodll to configure the recorder and its behaviour.  Defaults are in place for each of the attribute/parameters. So you should omit ones that you are not interested in.
 
 ## Token
-> This is PHP code
+
+> This is sample PHP code to fetch a token.
+
 ```php
 <?
 function fetchToken()
@@ -179,7 +181,8 @@ You are going to need a token. Cloud Poodll uses this to authorise your access t
 
 You request a token using your [https://poodll.com](https://poodll.com) username and API secret. [This page](https://support.poodll.com/support/solutions/articles/19000083076-cloud-poodll-api-secret) explains how to get an API secret. 
 The token request takes the following format: 
-https://cloud.poodll.com/login/token.php?username=[YOURUSERNAME]&password=[YOURAPISECRET]&service=cloud_poodll
+
+`https://cloud.poodll.com/login/token.php?username=[YOURUSERNAME]&password=[YOURAPISECRET]&service=cloud_poodll`
 
 You should get back a response like this:
 `{"token":"643eba92a1447ac0c6a882c85051461a","privatetoken":null}`
