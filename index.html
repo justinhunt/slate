@@ -364,36 +364,36 @@ Note that the name of the attribute declared in the map to the insertRecorder fu
 <p>The simplest way to configure the Cloud Poodll recorders is via data-xxxx attributes on the container element. The Cloud Poodll loaders will pick those up and pass them as parameters to Cloud Poodll to configure the recorder and its behaviour.  Defaults are in place for each of the attribute/parameters. So you should omit ones that you are not interested in.</p>
 <h2 id='token'>Token</h2>
 <blockquote>
-<p>This is PHP code
-```php
-&lt;?
-function fetchToken()
-{
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-        CURLOPT_RETURNTRANSFER =&gt; 1,
-        CURLOPT_URL =&gt; &#39;https://cloud.poodll.com/login/token.php?username=localhostuser&amp;password=123456789ABCDEF&amp;service=cloud_poodll&#39;
-    ));
-// Send the request &amp; save response to $resp
-    $resp = curl_exec($curl);
-    $token=&quot;&quot;;
-    if ($resp) {
-        $resp_object = json_decode($resp);
-        $token = $resp_object-&gt;token;
-    }</p>
+<p>This is sample PHP code to fetch a token.</p>
 </blockquote>
+<pre class="highlight php tab-php"><code><span class="cp">&lt;?</span>
+<span class="k">function</span> <span class="nf">fetchToken</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$curl</span> <span class="o">=</span> <span class="nb">curl_init</span><span class="p">();</span>
+    <span class="nb">curl_setopt_array</span><span class="p">(</span><span class="nv">$curl</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="nx">CURLOPT_RETURNTRANSFER</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">CURLOPT_URL</span> <span class="o">=&gt;</span> <span class="s1">'https://cloud.poodll.com/login/token.php?username=localhostuser&amp;password=123456789ABCDEF&amp;service=cloud_poodll'</span>
+    <span class="p">));</span>
+<span class="c1">// Send the request &amp; save response to $resp
+</span>    <span class="nv">$resp</span> <span class="o">=</span> <span class="nb">curl_exec</span><span class="p">(</span><span class="nv">$curl</span><span class="p">);</span>
+    <span class="nv">$token</span><span class="o">=</span><span class="s2">""</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$resp</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$resp_object</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$resp</span><span class="p">);</span>
+        <span class="nv">$token</span> <span class="o">=</span> <span class="nv">$resp_object</span><span class="o">-&gt;</span><span class="na">token</span><span class="p">;</span>
+    <span class="p">}</span>
 
-<p>// Close request and tidy up
-    curl_close($curl);
-    return $token;
-}
-?&gt;
-```
-You are going to need a token. Cloud Poodll uses this to authorise your access to the service from your registered URLs. You can get a free trial account at https://poodll.com/pricing and can register two URLs with that. </p>
+<span class="c1">// Close request and tidy up
+</span>    <span class="nb">curl_close</span><span class="p">(</span><span class="nv">$curl</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nv">$token</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+<p>You are going to need a token. Cloud Poodll uses this to authorise your access to the service from your registered URLs. You can get a free trial account at https://poodll.com/pricing and can register two URLs with that. </p>
 
 <p>You request a token using your <a href="https://poodll.com">https://poodll.com</a> username and API secret. <a href="https://support.poodll.com/support/solutions/articles/19000083076-cloud-poodll-api-secret">This page</a> explains how to get an API secret. 
-The token request takes the following format: 
-https://cloud.poodll.com/login/token.php?username=[YOURUSERNAME]&amp;password=[YOURAPISECRET]&amp;service=cloud_poodll</p>
+The token request takes the following format: </p>
+
+<p><code>https://cloud.poodll.com/login/token.php?username=[YOURUSERNAME]&amp;password=[YOURAPISECRET]&amp;service=cloud_poodll</code></p>
 
 <p>You should get back a response like this:
 <code>{&quot;token&quot;:&quot;643eba92a1447ac0c6a882c85051461a&quot;,&quot;privatetoken&quot;:null}</code></p>
