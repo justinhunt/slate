@@ -14,9 +14,20 @@ search: false
 
 # Introduction
 
-Cloud Poodll is a single javascript file that will load Poodll audio or video recorders into html divs on the page. Cloud Poodll has no dependencies. It works within or without an AMD module.
+Cloud Poodll is a single javascript file, and a few optional helpers, that will load Poodll audio and video recorders into html divs on the page. Cloud Poodll has no dependencies. It works within or without an AMD module.
 
 [Poodll](https://poodll.com) is a set of language learning tools for teachers and learners, that was developed for the [Moodle](https://moodle.org) platform. With Cloud Poodll educators and interested people can embed Poodll anywhere they like!
+
+# How it works
+
+The cloud poodll library will load the Poodll recorders inside an iframe on your page. When the user records something it sends events back to tell you about the recorded file. Cloud poodll will (optionally) convert the recorded files to mp3 and mp4 for you , and it stores them in the Poodll cloud. You can use them directly from there, or if you wish you can copy them back to your own storage.
+
+Since Cloud Poodll handles all the hard work of recording and converting and storing, all you need to do is concentrate on your own app. Cloud Poodll doesn't care if your site is PHP or Ruby or Wix or whatever. But it will need to have an HTTPS url.
+
+# Try it now
+
+You can try it out now on [codepen](https://codepen.io/poodllguy/pen/RyOLJO]). We have set up a barebones example there. Be sure to check back here though to see all the options you have to configure it.
+There are also two sample files, cloudpoodlltester.php and cloudpoodlltester.html that expect to be run under localhost. Get those from the resources folder of the [Cloud Poodll Github repository](https://github.com/justinhunt/cloudpoodll).
 
 # Loading
 
@@ -139,7 +150,44 @@ Cloud Poodll can work from within an AMD module. Either from CDN directly or fro
 
 The simplest way to configure the Cloud Poodll recorders is via data-xxxx attributes on the container element. The Cloud Poodll loaders will pick those up and pass them as parameters to Cloud Poodll to configure the recorder and its behaviour.  Defaults are in place for each of the attribute/parameters. So you should omit ones that you are not interested in.
 
+## Token
+```php
+<?
+//THIS IS PHP CODE 
+function fetchToken()
+{
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => 'https://cloud.poodll.com/login/token.php?username=localhostuser&password=123456789ABCDEF&service=cloud_poodll'
+    ));
+// Send the request & save response to $resp
+    $resp = curl_exec($curl);
+    $token="";
+    if ($resp) {
+        $resp_object = json_decode($resp);
+        $token = $resp_object->token;
+    }
 
+// Close request and tidy up
+    curl_close($curl);
+    return $token;
+}
+?>
+```
+You are going to need a token. Your code needs to request a token using your username and API secret from [https://poodll.com](https://poodll.com). More on that later. 
+To get the token you will need to make a request of the following format to Cloud Poodll. 
+https://cloud.poodll.com/login/token.php?username=[YOURUSERNAME]&password=[YOURAPISECRET]&service=cloud_poodll
+
+You should get back a response like this:
+{"token":"643eba92a1447ac0c6a882c85051461a","privatetoken":null}
+
+Thats your token and it expires every 12 hours, because otherwise any weirdo could get hold of it and record on your behalf.
+
+If you are using localhost or codepen and just want to play with it for goodness sake, you can use this one that never expires. But just remember that it will only work on localhost and codepen.
+<aside class="notice">
+643eba92a1447ac0c6a882c85051461a
+</aside>
 
 ## Parameters <a name="parameters"></a>
 > If setting parameters on container element
@@ -168,6 +216,7 @@ Parameter | Default | Description
 data-id | '' | A value passed in by the integrator, that is not used by Poodll. We simply pass it back out again with events. Its role is to allow the integrator’s callback javascript to know which recorder on the page the event occurred on.
 data-parent | URL of current page | The URL (as far as the domain) of the parent hosting the recorder iframe. This MUST be correct or stuff won't happen. It should start with https. Nothing will work on http sites.
 data-media | 'audio' | The type of media being recorded. Either 'audio' or 'video'
+data-token | 'somedefaultforlocalhost' | An authorisation token that you receive from https://cloud.poodll.com. You need this to access the service. The default token authorises localhost domain only.
 data-type | 'bmr' | The skin name of the recorder. Try ‘bmr’, or ‘onetwothree’
 data-width | 450 | The width in pixels of the iframe. Ignored if parameter iframeclass is set.
 data-height | 350 | The height in pixels of the iframe. Ignored if parameter iframeclass is set.
@@ -180,7 +229,7 @@ data-transcribelanguage | 'en' | If Cloud Poodll is transcribing the audio in yo
 data-expiredays | 365 | Sets the number of days for which Cloud Poodll will keep your file. Possible values are 1, 3, 7, 30, 90, 180, 365, 730, 9999. 9999 means Cloud Poodll will never automatically delete your file.
 data-owner | 'poodll' | An identifier tag that can be used to find recordings made by a particular individual/entity. Later, delete and other operations can be made against this.
 data-region | 'tokyo' | The Amazon AWS region in which recordings should be stored. Possible values are 'tokyo','useast1','dublin','sydney'
-data-token | 'somedefaultforlocalhost' | An authorisation token that you receive from https://cloud.poodll.com. You need this to access the service. The default token authorises localhost domain only.
+data-localloader | '' | Ordinarily the iframe content is loaded from poodllloader.php on cloud.poodll.com. Specify the location of poodllloader.html on your site and cloud poodll will user this on iOS mobile safari. Mobile safari will block cam/mic access otherwise. Path is relative to data-parent entry. Be sure to use a preceding slash. Get poodllloader.html from [https://github.com/justinhunt/cloudpoodll](https://github.com/justinhunt/cloudpoodll)
 
 # Events <a name="events"></a>
 
