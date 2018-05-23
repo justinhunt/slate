@@ -26,7 +26,7 @@ Since Cloud Poodll handles all the hard work of recording and converting and sto
 
 # Try it now
 
-You can try it out now on [codepen](https://codepen.io/poodllguy/pen/RyOLJO]). We have set up a barebones example there. Be sure to check back here though to see all the options you have to configure it.
+We have set up a barebones example on [codepen](https://codepen.io/poodllguy/pen/RyOLJO]). Be sure to check back here though to see all the options you have to configure it.
 There are also two sample files, cloudpoodlltester.php and cloudpoodlltester.html that expect to be run under localhost. Get those from the resources folder of the [Cloud Poodll Github repository](https://github.com/justinhunt/cloudpoodll).
 
 # Loading
@@ -151,9 +151,9 @@ Cloud Poodll can work from within an AMD module. Either from CDN directly or fro
 The simplest way to configure the Cloud Poodll recorders is via data-xxxx attributes on the container element. The Cloud Poodll loaders will pick those up and pass them as parameters to Cloud Poodll to configure the recorder and its behaviour.  Defaults are in place for each of the attribute/parameters. So you should omit ones that you are not interested in.
 
 ## Token
+> This is PHP code
 ```php
 <?
-//THIS IS PHP CODE 
 function fetchToken()
 {
     $curl = curl_init();
@@ -175,19 +175,21 @@ function fetchToken()
 }
 ?>
 ```
-You are going to need a token. Your code needs to request a token using your username and API secret from [https://poodll.com](https://poodll.com). More on that later. 
-To get the token you will need to make a request of the following format to Cloud Poodll. 
+You are going to need a token. Cloud Poodll uses this to authorise your access to the service from your registered URLs. You can get a free trial account at https://poodll.com/pricing and can register two URLs with that. 
+
+You request a token using your [https://poodll.com](https://poodll.com) username and API secret. [This page](https://support.poodll.com/support/solutions/articles/19000083076-cloud-poodll-api-secret) explains how to get an API secret. 
+The token request takes the following format: 
 https://cloud.poodll.com/login/token.php?username=[YOURUSERNAME]&password=[YOURAPISECRET]&service=cloud_poodll
 
 You should get back a response like this:
-{"token":"643eba92a1447ac0c6a882c85051461a","privatetoken":null}
+`{"token":"643eba92a1447ac0c6a882c85051461a","privatetoken":null}`
 
 Thats your token and it expires every 12 hours, because otherwise any weirdo could get hold of it and record on your behalf.
 
 If you are using localhost or codepen and just want to play with it for goodness sake, you can use this one that never expires. But just remember that it will only work on localhost and codepen.
-<aside class="notice">
-643eba92a1447ac0c6a882c85051461a
-</aside>
+
+`643eba92a1447ac0c6a882c85051461a`
+
 
 ## Parameters <a name="parameters"></a>
 > If setting parameters on container element
@@ -224,7 +226,7 @@ data-iframeclass | '' | The class that will be applied to the iframe. You would 
 data-updatecontrol | '' | The DOM id of a form control on the page (probably type ‘hidden’ or ‘text’). When a recording is saved successfully, and when data-inputcontrol is set, Poodll will set the URL of the recorded file as the value on the control. NB The updatecontrol parameter will be ignored if you have registered a callback function to handle [Cloud Poodll events](#events).
 data-timelimit | 0 | If set this will set the number of seconds available for recording.
 data-transcode | 1 | If set to 1, Cloud Poodll will transcode audio to MP3 and video to MP4 for you. 1 means yes. 0 means no.
-data-transcribe | 0 | If set to 1, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll [transcriptioncomplete event](#transcriptioncomplete).
+data-transcribe | 0 | NOT IMPLEMENTED YET. If set to 1, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll [transcriptioncomplete event](#transcriptioncomplete).
 data-transcribelanguage | 'en' | If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. Possible values are "en" and "es" (ie English or Spanish).
 data-expiredays | 365 | Sets the number of days for which Cloud Poodll will keep your file. Possible values are 1, 3, 7, 30, 90, 180, 365, 730, 9999. 9999 means Cloud Poodll will never automatically delete your file.
 data-owner | 'poodll' | An identifier tag that can be used to find recordings made by a particular individual/entity. Later, delete and other operations can be made against this.
