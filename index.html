@@ -411,7 +411,7 @@ The token request takes the following format: </p>
 <span class="na">data-media=</span><span class="s">"audio"</span> <span class="na">data-type=</span><span class="s">"bmr"</span> <span class="na">data-width=</span><span class="s">"450"</span> <span class="na">data-height=</span><span class="s">"350"</span>
 <span class="na">data-iframeclass=</span><span class="s">"letsberesponsive"</span> <span class="na">data-updatecontrol=</span><span class="s">"someformfieldid"</span> <span class="na">data-timelimit=</span><span class="s">"5"</span>
 <span class="na">data-transcode=</span><span class="s">"1"</span> <span class="na">data-transcribe=</span><span class="s">"0"</span> <span class="na">data-transcribelanguage=</span><span class="s">"en"</span>
-<span class="na">data-expiredays=</span><span class="s">"365"</span> <span class="na">data-region=</span><span class="s">"tokyo"</span> <span class="na">data-token=</span><span class="s">"12345token"</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="na">data-expiredays=</span><span class="s">"365"</span> <span class="na">data-region=</span><span class="s">"tokyo"</span> <span class="na">data-token=</span><span class="s">"643eba92a1447ac0c6a882c85051461a"</span><span class="nt">&gt;&lt;/div&gt;</span>
 </code></pre>
 <blockquote>
 <p>If setting parameters as a map</p>
@@ -420,7 +420,7 @@ The token request takes the following format: </p>
 </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bmr"</span><span class="p">,</span><span class="w"> </span><span class="s2">"width"</span><span class="p">:</span><span class="w"> </span><span class="mi">450</span><span class="p">,</span><span class="w"> </span><span class="s2">"height"</span><span class="p">:</span><span class="w"> </span><span class="mi">350</span><span class="p">,</span><span class="w"> </span><span class="s2">"iframeclass"</span><span class="p">:</span><span class="w"> </span><span class="s2">"letsberesponsive"</span><span class="p">,</span><span class="w">
 </span><span class="s2">"updatecontrol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"someformfieldid"</span><span class="p">,</span><span class="w"> </span><span class="s2">"timelimit"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s2">"transcode"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
 </span><span class="s2">"transcribe"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s2">"transcribelanguage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w"> </span><span class="s2">"expiredays"</span><span class="p">:</span><span class="w"> </span><span class="mi">365</span><span class="p">,</span><span class="w">
-</span><span class="s2">"owner"</span><span class="p">:</span><span class="s2">"poodll"</span><span class="p">,</span><span class="s2">"region"</span><span class="p">:</span><span class="s2">"tokyo"</span><span class="p">,</span><span class="s2">"token"</span><span class="p">:</span><span class="s2">"12345token"</span><span class="p">}</span><span class="w">
+</span><span class="s2">"owner"</span><span class="p">:</span><span class="s2">"poodll"</span><span class="p">,</span><span class="s2">"region"</span><span class="p">:</span><span class="s2">"tokyo"</span><span class="p">,</span><span class="s2">"token"</span><span class="p">:</span><span class="s2">"643eba92a1447ac0c6a882c85051461a"</span><span class="p">}</span><span class="w">
 </span></code></pre>
 <table><thead>
 <tr>
@@ -446,8 +446,8 @@ The token request takes the following format: </p>
 </tr>
 <tr>
 <td>data-token</td>
-<td>&#39;somedefaultforlocalhost&#39;</td>
-<td>An authorisation token that you receive from https://cloud.poodll.com. You need this to access the service. The default token authorises localhost domain only.</td>
+<td>&#39;&#39;</td>
+<td>An authorisation token that you receive from https://cloud.poodll.com. You need this to access the service.</td>
 </tr>
 <tr>
 <td>data-type</td>
@@ -490,11 +490,6 @@ The token request takes the following format: </p>
 <td>If set to 1, Cloud Poodll will transcribe the audio in the file to text. This process can take several minutes. Eventually notification that the process has finished will come to the notificationurl. But for now a text file containing the transcript will become available of the same filename as the recorded file with an extra &quot;.txt&quot; file extension.</td>
 </tr>
 <tr>
-<td>data-transcribevocab</td>
-<td>none</td>
-<td>Not implemented yet.</td>
-</tr>
-<tr>
 <td>data-speechevents</td>
 <td>0</td>
 <td>If set to 1, and the browser supports the web speech API (desktop chrome only) then when speech is captured it will be sent to a speech recognition engine and results returned in real time in the &quot;speech&quot; event.</td>
@@ -502,7 +497,7 @@ The token request takes the following format: </p>
 <tr>
 <td>data-language</td>
 <td>&#39;en-US&#39;</td>
-<td>If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. For transcription purposes, possible values are &quot;en-US&quot; and &quot;es-US&quot; (ie English or Spanish). For speech events from Google Chrome any of the language identifiers <a href="https://cloud.google.com/speech-to-text/docs/languages">here</a> will work.</td>
+<td>If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. For (Amazon) transcription purposes, possible values are &quot;en-US&quot; and &quot;es-US&quot; (ie English or Spanish). For speech events from Google Chrome any of the language identifiers <a href="https://cloud.google.com/speech-to-text/docs/languages">here</a> will work.</td>
 </tr>
 <tr>
 <td>data-expiredays</td>
@@ -522,7 +517,17 @@ The token request takes the following format: </p>
 <tr>
 <td>data-localloader</td>
 <td>&#39;&#39;</td>
-<td>Ordinarily the iframe content is loaded from poodllloader.php on cloud.poodll.com. Specify the location of poodllloader.html on your site and cloud poodll will user this on iOS mobile safari. Mobile safari will block cam/mic access otherwise. Path is relative to data-parent entry. Be sure to use a preceding slash. Get poodllloader.html from <a href="https://github.com/justinhunt/cloudpoodll">https://github.com/justinhunt/cloudpoodll</a></td>
+<td>Ordinarily the iframe content is loaded from poodllloader.php on cloud.poodll.com. Specify the location of poodllloader.html on your site and cloud poodll will use this on iOS mobile safari. Mobile safari will block cam/mic access otherwise. Path is relative to data-parent entry. Be sure to use a preceding slash. Get poodllloader.html from <a href="https://github.com/justinhunt/cloudpoodll">https://github.com/justinhunt/cloudpoodll</a></td>
+</tr>
+<tr>
+<td>data-transcribevocab</td>
+<td>none</td>
+<td>Not implemented yet.</td>
+</tr>
+<tr>
+<td>data-notificationurl</td>
+<td>none</td>
+<td>Not implemented yet.</td>
 </tr>
 </tbody></table>
 <h1 id='events'>Events <a name="events"></a></h1>
@@ -532,8 +537,8 @@ So we have events. The events that you get are:</p>
 <ul>
 <li>awaitingprocessing</li>
 <li>filesubmitted</li>
-<li>speech</li>
 <li>recording</li>
+<li>speech</li>
 <li>error</li>
 </ul>
 
@@ -552,8 +557,12 @@ So we have events. The events that you get are:</p>
 <td>When your recording is uploaded and converted, the filesubmitted event fires. It carries with it the information that you need about filenames and URLs.</td>
 </tr>
 <tr>
-<td>transactioncomplete</td>
-<td>After your recording is uploaded and converted, and if you have set data-transcribe to yes, then Cloud Poodll will post your file for transcription. The result of that arrives in this event.</td>
+<td>recording</td>
+<td>When recording starts or stops, this event fires.</td>
+</tr>
+<tr>
+<td>speech</td>
+<td>If you have set data-speechevents to 1, then Cloud Poodll will post your audio to Google for speech recognition. The recognised text result of that arrives in this event.</td>
 </tr>
 <tr>
 <td>error</td>
@@ -618,15 +627,15 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 </tr>
 <tr>
 <td>mediaurl</td>
-<td>The url of the recorded file</td>
+<td>The eventual url of the recorded file. It is not necessary to make the user wait for it to become available if they do not need to confirm it.</td>
 </tr>
 <tr>
 <td>mediafilename</td>
-<td>This is the filename of the recorded file in S3 storage.</td>
+<td>This is the eventual filename of the recorded file in S3 storage.</td>
 </tr>
 <tr>
 <td>transcripturl</td>
-<td>The url of the recorded file&#39;s transcript as produced by Amazon transcribe. Only available if transcribe attribute is set. Becomes available several minutes after recording.</td>
+<td>The eventual url of the recorded file&#39;s transcript as produced by Amazon transcribe. Only available if transcribe attribute is set. Becomes available several minutes after recording.</td>
 </tr>
 <tr>
 <td>transcriptfilename</td>
@@ -634,7 +643,7 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 </tr>
 <tr>
 <td>s3root</td>
-<td>This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.</td>
+<td>This is the directory in which the mediafile and transcript files are stored in S3 storage. Combine with the filenames to make the full URL.</td>
 </tr>
 <tr>
 <td>updatecontrol</td>
@@ -666,7 +675,7 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 </tr>
 <tr>
 <td>transcripturl</td>
-<td>The url of the recorded file&#39;s transcript as produced by Amazon transcribe. Only available if transcribe attribute is set. Becomes available several minutes after recording.</td>
+<td>The eventual url of the recorded file&#39;s transcript as produced by Amazon transcribe. Only available if transcribe attribute is set. Becomes available several minutes after recording.</td>
 </tr>
 <tr>
 <td>transcriptfilename</td>
@@ -674,7 +683,7 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 </tr>
 <tr>
 <td>s3root</td>
-<td>This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.</td>
+<td>This is the directory in which the mediafile and transcript files are stored in S3 storage. Combine with the filenames to make the full URL.</td>
 </tr>
 <tr>
 <td>updatecontrol</td>
