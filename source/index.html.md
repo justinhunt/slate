@@ -187,7 +187,7 @@ The token request takes the following format:
 You should get back a response like this:
 `{"token":"643eba92a1447ac0c6a882c85051461a","privatetoken":null}`
 
-Thats your token and it expires every 12 hours, because otherwise any weirdo could get hold of it and record on your behalf.
+Thats your token and it expires every 12 hours, because otherwise any weirdo could get hold of it and record on your behalf. But to make life easier, Poodll will remember the active token and subsequent requests for a token will return that, automatically returning a new token as required.
 
 If you are using localhost or codepen and just want to play with it for goodness sake, you can use this one that never expires. But just remember that it will only work on localhost and codepen.
 
@@ -202,7 +202,7 @@ If you are using localhost or codepen and just want to play with it for goodness
 data-media="audio" data-type="bmr" data-width="450" data-height="350"
 data-iframeclass="letsberesponsive" data-updatecontrol="someformfieldid" data-timelimit="5"
 data-transcode="1" data-transcribe="0" data-transcribelanguage="en"
-data-expiredays="365" data-region="tokyo" data-token="12345token"></div>
+data-expiredays="365" data-region="tokyo" data-token="643eba92a1447ac0c6a882c85051461a"></div>
 ```
 
 > If setting parameters as a map
@@ -212,7 +212,7 @@ data-expiredays="365" data-region="tokyo" data-token="12345token"></div>
 "type": "bmr", "width": 450, "height": 350, "iframeclass": "letsberesponsive",
 "updatecontrol": "someformfieldid", "timelimit": 5, "transcode": 1,
 "transcribe": 0, "transcribelanguage": "en", "expiredays": 365,
-"owner":"poodll","region":"tokyo","token":"12345token"}
+"owner":"poodll","region":"tokyo","token":"643eba92a1447ac0c6a882c85051461a"}
 ```
 
 
@@ -221,7 +221,7 @@ Parameter | Default | Description
 data-id | '' | A value passed in by the integrator, that is not used by Poodll. We simply pass it back out again with events. Its role is to allow the integrator’s callback javascript to know which recorder on the page the event occurred on.
 data-parent | URL of current page | The URL (as far as the domain) of the parent hosting the recorder iframe. This MUST be correct or stuff won't happen. It should start with https. Nothing will work on http sites.
 data-media | 'audio' | The type of media being recorded. Either 'audio' or 'video'
-data-token | 'somedefaultforlocalhost' | An authorisation token that you receive from https://cloud.poodll.com. You need this to access the service. The default token authorises localhost domain only.
+data-token | '' | An authorisation token that you receive from https://cloud.poodll.com. You need this to access the service. 
 data-type | 'bmr' | The skin name of the recorder. Try ‘bmr’, or ‘onetwothree’
 data-width | 450 | The width in pixels of the iframe. Ignored if parameter iframeclass is set.
 data-height | 350 | The height in pixels of the iframe. Ignored if parameter iframeclass is set.
@@ -229,12 +229,15 @@ data-iframeclass | '' | The class that will be applied to the iframe. You would 
 data-updatecontrol | '' | The DOM id of a form control on the page (probably type ‘hidden’ or ‘text’). When a recording is saved successfully, and when data-inputcontrol is set, Poodll will set the URL of the recorded file as the value on the control. NB The updatecontrol parameter will be ignored if you have registered a callback function to handle [Cloud Poodll events](#events).
 data-timelimit | 0 | If set this will set the number of seconds available for recording.
 data-transcode | 1 | If set to 1, Cloud Poodll will transcode audio to MP3 and video to MP4 for you. 1 means yes. 0 means no.
-data-transcribe | 0 | NOT IMPLEMENTED YET. If set to 1, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll [transcriptioncomplete event](#transcriptioncomplete).
-data-transcribelanguage | 'en' | If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. Possible values are "en" and "es" (ie English or Spanish).
+data-transcribe | 0 | If set to 1, Cloud Poodll will transcribe the audio in the file to text. This process can take several minutes. Eventually notification that the process has finished will come to the notificationurl. But for now a text file containing the transcript will become available of the same filename as the recorded file with an extra ".txt" file extension.
+data-speechevents | 0 | If set to 1, and the browser supports the web speech API (desktop chrome only) then when speech is captured it will be sent to a speech recognition engine and results returned in real time in the "speech" event.
+data-language | 'en-US' | If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. For (Amazon) transcription purposes, possible values are "en-US" and "es-US" (ie English or Spanish). For speech events from Google Chrome any of the language identifiers [here](https://cloud.google.com/speech-to-text/docs/languages) will work.
 data-expiredays | 365 | Sets the number of days for which Cloud Poodll will keep your file. Possible values are 1, 3, 7, 30, 90, 180, 365, 730, 9999. 9999 means Cloud Poodll will never automatically delete your file.
 data-owner | 'poodll' | An identifier tag that can be used to find recordings made by a particular individual/entity. Later, delete and other operations can be made against this.
 data-region | 'tokyo' | The Amazon AWS region in which recordings should be stored. Possible values are 'tokyo','useast1','dublin','sydney'
-data-localloader | '' | Ordinarily the iframe content is loaded from poodllloader.php on cloud.poodll.com. Specify the location of poodllloader.html on your site and cloud poodll will user this on iOS mobile safari. Mobile safari will block cam/mic access otherwise. Path is relative to data-parent entry. Be sure to use a preceding slash. Get poodllloader.html from [https://github.com/justinhunt/cloudpoodll](https://github.com/justinhunt/cloudpoodll)
+data-localloader | '' | Ordinarily the iframe content is loaded from poodllloader.php on cloud.poodll.com. Specify the location of poodllloader.html on your site and cloud poodll will use this on iOS mobile safari. Mobile safari will block cam/mic access otherwise. Path is relative to data-parent entry. Be sure to use a preceding slash. Get poodllloader.html from [https://github.com/justinhunt/cloudpoodll](https://github.com/justinhunt/cloudpoodll)
+data-transcribevocab | none | Not implemented yet.
+data-notificationurl | none | Not implemented yet.
 
 # Events <a name="events"></a>
 
@@ -243,14 +246,16 @@ So we have events. The events that you get are:
 
 * awaitingprocessing
 * filesubmitted
-* transcriptioncomplete
+* recording
+* speech
 * error
 
 Event | Description
 --------- | ---------
 awaitingprocessing | After uploading, recordings are converted(optional), and then copied to a final destination. Use this event to do somethung while the user waits. If you do not wish to wait, the final URL is known at this stage and unless an error occurs, it can be trusted..
 filesubmitted | When your recording is uploaded and converted, the filesubmitted event fires. It carries with it the information that you need about filenames and URLs.
-transactioncomplete | After your recording is uploaded and converted, and if you have set data-transcribe to yes, then Cloud Poodll will post your file for transcription. The result of that arrives in this event.
+recording | When recording starts or stops, this event fires.
+speech | If you have set data-speechevents to 1, then Cloud Poodll will post your audio to Google for speech recognition. The recognised text result of that arrives in this event.
 error | If an error occurs, Cloud Poodll will do its best to return a notification of that and a message explaining what went wrong.
 
 ## Callback
@@ -287,9 +292,12 @@ CloudPoodll.theCallback=function(thedata){
         case 'filesubmitted':
             alert('filesubmitted:' + thedata.finalurl);
             break;
-        case 'transcriptioncomplete':
-            alert('transcriptioncomplete:' + thedata.transcription);
+        case 'speech':
+            alert('speech:' + thedata.transcription);
             break;
+        case 'recording':
+                    alert('recording:' + thedata.action);
+                    break;
         case 'error':
             alert('Error: ' + thedata.message);
             break;
@@ -305,9 +313,11 @@ Name | Description
 --------- | ---------
 type | 'awaitingprocessing'
 id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
-finalurl | The url of the recorded file 
-s3filename | This is the filename of the file in S3 storage. 
-s3root | This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.
+mediaurl | The eventual url of the recorded file. It is not necessary to make the user wait for it to become available if they do not need to confirm it. 
+mediafilename | This is the eventual filename of the recorded file in S3 storage. 
+transcripturl | The eventual url of the recorded file's transcript as produced by Amazon transcribe. Only available if transcribe attribute is set. Becomes available several minutes after recording. 
+transcriptfilename | This is the filename of the transcript file in S3 storage. 
+s3root | This is the directory in which the mediafile and transcript files are stored in S3 storage. Combine with the filenames to make the full URL.
 updatecontrol | This is the DOM id of the updatecontrol element that the recorder was initialised with.
 
 ### filesubmitted
@@ -316,24 +326,30 @@ Name | Description
 --------- | ---------
 type | 'filesubmitted'
 id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
-finalurl | The url of the recorded file 
-s3filename | This is the filename of the file in S3 storage. 
-s3root | This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.
+mediaurl | The url of the recorded file 
+mediafilename | This is the filename of the recorded file in S3 storage. 
+transcripturl | The eventual url of the recorded file's transcript as produced by Amazon transcribe. Only available if transcribe attribute is set. Becomes available several minutes after recording. 
+transcriptfilename | This is the filename of the transcript file in S3 storage.
+s3root | This is the directory in which the mediafile and transcript files are stored in S3 storage. Combine with the filenames to make the full URL.
 updatecontrol | This is the DOM id of the updatecontrol element that the recorder was initialised with.
 
-### transcriptioncomplete
+### speech
 
 Name | Description
 --------- | ---------
-type | 'transcriptioncomplete'
+type | 'speech'
 id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
-finalurl | The url of the recorded file 
-s3filename | This is the filename of the file in S3 storage. 
-s3root | This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.
-updatecontrol | This is the DOM id of the updatecontrol element that the recorder was initialised with.
-language | This is the language that was transcribed. Either 'en' or 'es' (English or Spanish)
-transcription | This is the text that was transcribed.
-confidence | This is a numerical confidence score of the transcription accuracy.
+capturedspeech | This is the most recent text to speech snippet as produced by Google Web Speech API. Requires Google Chrome and speechevents attribute should be set to 1.
+
+
+### recording
+
+Name | Description
+--------- | ---------
+type | 'recording'
+id | The id of the recorder that the event originated from. This is the id you set when creating the recorder.
+action | Either "started" or "stopped" depending on what the user did.
+
 
 ### error
 
