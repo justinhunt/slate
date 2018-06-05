@@ -398,7 +398,7 @@ The token request takes the following format: </p>
 <p>You should get back a response like this:
 <code>{&quot;token&quot;:&quot;643eba92a1447ac0c6a882c85051461a&quot;,&quot;privatetoken&quot;:null}</code></p>
 
-<p>Thats your token and it expires every 12 hours, because otherwise any weirdo could get hold of it and record on your behalf.</p>
+<p>Thats your token and it expires every 12 hours, because otherwise any weirdo could get hold of it and record on your behalf. But to make life easier, Poodll will remember the active token and subsequent requests for a token will return that, automatically returning a new token as required.</p>
 
 <p>If you are using localhost or codepen and just want to play with it for goodness sake, you can use this one that never expires. But just remember that it will only work on localhost and codepen.</p>
 
@@ -487,12 +487,22 @@ The token request takes the following format: </p>
 <tr>
 <td>data-transcribe</td>
 <td>0</td>
-<td>NOT IMPLEMENTED YET. If set to 1, Cloud Poodll will transcribe the audio in the file to text and return it in the Cloud Poodll <a href="#transcriptioncomplete">transcriptioncomplete event</a>.</td>
+<td>If set to 1, Cloud Poodll will transcribe the audio in the file to text. This process can take several minutes. Eventually notification that the process has finished will come to the notificationurl. But for now a text file containing the transcript will become available of the same filename as the recorded file with an extra &quot;.txt&quot; file extension.</td>
 </tr>
 <tr>
-<td>data-transcribelanguage</td>
-<td>&#39;en&#39;</td>
-<td>If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. Possible values are &quot;en&quot; and &quot;es&quot; (ie English or Spanish).</td>
+<td>data-transcribevocab</td>
+<td>none</td>
+<td>Not implemented yet.</td>
+</tr>
+<tr>
+<td>data-speechevents</td>
+<td>0</td>
+<td>If set to 1, and the browser supports the web speech API (desktop chrome only) then when speech is captured it will be sent to a speech recognition engine and results returned in real time in the &quot;speech&quot; event.</td>
+</tr>
+<tr>
+<td>data-language</td>
+<td>&#39;en-US&#39;</td>
+<td>If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. For transcription purposes, possible values are &quot;en-US&quot; and &quot;es-US&quot; (ie English or Spanish). For speech events from Google Chrome any of the language identifiers <a href="https://cloud.google.com/speech-to-text/docs/languages">here</a> will work.</td>
 </tr>
 <tr>
 <td>data-expiredays</td>
@@ -522,7 +532,8 @@ So we have events. The events that you get are:</p>
 <ul>
 <li>awaitingprocessing</li>
 <li>filesubmitted</li>
-<li>transcriptioncomplete</li>
+<li>speech</li>
+<li>recording</li>
 <li>error</li>
 </ul>
 
@@ -577,9 +588,12 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
         <span class="k">case</span> <span class="s1">'filesubmitted'</span><span class="p">:</span>
             <span class="nx">alert</span><span class="p">(</span><span class="s1">'filesubmitted:'</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">finalurl</span><span class="p">);</span>
             <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="s1">'transcriptioncomplete'</span><span class="p">:</span>
-            <span class="nx">alert</span><span class="p">(</span><span class="s1">'transcriptioncomplete:'</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">transcription</span><span class="p">);</span>
+        <span class="k">case</span> <span class="s1">'speech'</span><span class="p">:</span>
+            <span class="nx">alert</span><span class="p">(</span><span class="s1">'speech:'</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">transcription</span><span class="p">);</span>
             <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s1">'recording'</span><span class="p">:</span>
+                    <span class="nx">alert</span><span class="p">(</span><span class="s1">'recording:'</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">action</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
         <span class="k">case</span> <span class="s1">'error'</span><span class="p">:</span>
             <span class="nx">alert</span><span class="p">(</span><span class="s1">'Error: '</span> <span class="o">+</span> <span class="nx">thedata</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
             <span class="k">break</span><span class="p">;</span>
@@ -603,12 +617,20 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 <td>The id of the recorder that the event originated from. This is the id you set when creating the recorder.</td>
 </tr>
 <tr>
-<td>finalurl</td>
+<td>mediaurl</td>
 <td>The url of the recorded file</td>
 </tr>
 <tr>
-<td>s3filename</td>
-<td>This is the filename of the file in S3 storage.</td>
+<td>mediafilename</td>
+<td>This is the filename of the recorded file in S3 storage.</td>
+</tr>
+<tr>
+<td>transcripturl</td>
+<td>The url of the recorded file&#39;s transcript as produced by Amazon transcribe. Only available if transcribe attribute is set. Becomes available several minutes after recording.</td>
+</tr>
+<tr>
+<td>transcriptfilename</td>
+<td>This is the filename of the transcript file in S3 storage.</td>
 </tr>
 <tr>
 <td>s3root</td>
@@ -635,12 +657,20 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 <td>The id of the recorder that the event originated from. This is the id you set when creating the recorder.</td>
 </tr>
 <tr>
-<td>finalurl</td>
+<td>mediaurl</td>
 <td>The url of the recorded file</td>
 </tr>
 <tr>
-<td>s3filename</td>
-<td>This is the filename of the file in S3 storage.</td>
+<td>mediafilename</td>
+<td>This is the filename of the recorded file in S3 storage.</td>
+</tr>
+<tr>
+<td>transcripturl</td>
+<td>The url of the recorded file&#39;s transcript as produced by Amazon transcribe. Only available if transcribe attribute is set. Becomes available several minutes after recording.</td>
+</tr>
+<tr>
+<td>transcriptfilename</td>
+<td>This is the filename of the transcript file in S3 storage.</td>
 </tr>
 <tr>
 <td>s3root</td>
@@ -651,7 +681,7 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 <td>This is the DOM id of the updatecontrol element that the recorder was initialised with.</td>
 </tr>
 </tbody></table>
-<h3 id='transcriptioncomplete'>transcriptioncomplete</h3>
+<h3 id='speech'>speech</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -660,39 +690,35 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 </thead><tbody>
 <tr>
 <td>type</td>
-<td>&#39;transcriptioncomplete&#39;</td>
+<td>&#39;speech&#39;</td>
 </tr>
 <tr>
 <td>id</td>
 <td>The id of the recorder that the event originated from. This is the id you set when creating the recorder.</td>
 </tr>
 <tr>
-<td>finalurl</td>
-<td>The url of the recorded file</td>
+<td>capturedspeech</td>
+<td>This is the most recent text to speech snippet as produced by Google Web Speech API. Requires Google Chrome and speechevents attribute should be set to 1.</td>
+</tr>
+</tbody></table>
+<h3 id='recording'>recording</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>&#39;recording&#39;</td>
 </tr>
 <tr>
-<td>s3filename</td>
-<td>This is the filename of the file in S3 storage.</td>
+<td>id</td>
+<td>The id of the recorder that the event originated from. This is the id you set when creating the recorder.</td>
 </tr>
 <tr>
-<td>s3root</td>
-<td>This is the directory in which the file is stored in S3 storage. Combine with s3filename to make the full URL.</td>
-</tr>
-<tr>
-<td>updatecontrol</td>
-<td>This is the DOM id of the updatecontrol element that the recorder was initialised with.</td>
-</tr>
-<tr>
-<td>language</td>
-<td>This is the language that was transcribed. Either &#39;en&#39; or &#39;es&#39; (English or Spanish)</td>
-</tr>
-<tr>
-<td>transcription</td>
-<td>This is the text that was transcribed.</td>
-</tr>
-<tr>
-<td>confidence</td>
-<td>This is a numerical confidence score of the transcription accuracy.</td>
+<td>action</td>
+<td>Either &quot;started&quot; or &quot;stopped&quot; depending on what the user did.</td>
 </tr>
 </tbody></table>
 <h3 id='error'>error</h3>
