@@ -26,7 +26,7 @@ Since Cloud Poodll handles all the hard work of recording and converting and sto
 
 # Try it now
 
-We have set up a barebones example on [codepen](https://codepen.io/poodllguy/pen/RyOLJO]). Be sure to check back here though to see all the options you have to configure it.
+We have set up a barebones example on [codepen](https://codepen.io/poodllguy/pen/RyOLJO). Be sure to check back here though to see all the options you have to configure it.
 There are also two sample files, cloudpoodlltester.php and cloudpoodlltester.html that expect to be run under localhost. Get those from the resources folder of the [Cloud Poodll Github repository](https://github.com/justinhunt/cloudpoodll).
 
 # Loading
