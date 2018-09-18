@@ -525,6 +525,11 @@ The token request takes the following format: </p>
 <td>Ordinarily the iframe content is loaded from poodllloader.php on cloud.poodll.com. Specify the location of poodllloader.html on your site and cloud poodll will use this on iOS mobile safari. Mobile safari will block cam/mic access otherwise. Path is relative to data-parent entry. Be sure to use a preceding slash. Get poodllloader.html from <a href="https://github.com/justinhunt/cloudpoodll">https://github.com/justinhunt/cloudpoodll</a></td>
 </tr>
 <tr>
+<td>data-fallback</td>
+<td>&#39;iosupload&#39;</td>
+<td>The fallback method in the case that the browser does not support the media recording type. Try &#39;iosupload&#39;,&#39;upload&#39; or warning. &#39;warning&#39; shows a brief message recommending the user use Google Chrome on PC. &quot;upload&quot; shows an upload area. If the device is a mobile the user can choose to record straight from the native recorder. &quot;iosupload&quot; shows the uploader on iOS and a warning otherwise.</td>
+</tr>
+<tr>
 <td>data-transcribevocab</td>
 <td>none</td>
 <td>Not implemented yet.</td>
@@ -615,7 +620,7 @@ Note that for your events to fire, you must initiate them by calling: CloudPoodl
 <span class="p">};</span>
 </code></pre>
 <p>Each of the <a href="#events">events</a> described above returns a data payload to your callback function. The data contained in each event&#39;s data payload is explained in the table below.</p>
-<h3 id='awaitingconversion'>awaitingconversion</h3>
+<h3 id='awaitingprocessing'>awaitingprocessing</h3>
 <table><thead>
 <tr>
 <th>Name</th>
