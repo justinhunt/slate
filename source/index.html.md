@@ -222,7 +222,7 @@ data-id | '' | A value passed in by the integrator, that is not used by Poodll. 
 data-parent | URL of current page | The URL (as far as the domain) of the parent hosting the recorder iframe. This MUST be correct or stuff won't happen. It should start with https. Nothing will work on http sites.
 data-media | 'audio' | The type of media being recorded. Either 'audio' or 'video'
 data-token | '' | An authorisation token that you receive from https://cloud.poodll.com. You need this to access the service. 
-data-type | 'bmr' | The skin name of the recorder. Try ‘bmr’,or 'fresh' or 'once' or ‘onetwothree’
+data-type | 'bmr' | The skin name of the recorder. Try ‘bmr’,or 'fresh' or 'once' or ‘onetwothree’ or 'upload'
 data-width | 450 | The width in pixels of the iframe. Ignored if parameter iframeclass is set.
 data-height | 350 | The height in pixels of the iframe. Ignored if parameter iframeclass is set.
 data-iframeclass | '' | The class that will be applied to the iframe. You would use this to create a [responsive iframe.](https://blog.theodo.fr/2018/01/responsive-iframes-css-trick)
