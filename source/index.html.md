@@ -222,7 +222,7 @@ data-id | '' | A value passed in by the integrator, that is not used by Poodll. 
 data-parent | URL of current page | The URL (as far as the domain) of the parent hosting the recorder iframe. This MUST be correct or stuff won't happen. It should start with https. Nothing will work on http sites.
 data-media | 'audio' | The type of media being recorded. Either 'audio' or 'video'
 data-token | '' | An authorisation token that you receive from https://cloud.poodll.com. You need this to access the service. 
-data-type | 'bmr' | The skin name of the recorder. Try ‘bmr’, or ‘onetwothree’
+data-type | 'bmr' | The skin name of the recorder. Try ‘bmr’,or 'fresh' or 'once' or ‘onetwothree’
 data-width | 450 | The width in pixels of the iframe. Ignored if parameter iframeclass is set.
 data-height | 350 | The height in pixels of the iframe. Ignored if parameter iframeclass is set.
 data-iframeclass | '' | The class that will be applied to the iframe. You would use this to create a [responsive iframe.](https://blog.theodo.fr/2018/01/responsive-iframes-css-trick)
@@ -237,6 +237,7 @@ data-expiredays | 365 | Sets the number of days for which Cloud Poodll will keep
 data-owner | 'poodll' | An identifier tag that can be used to find recordings made by a particular individual/entity. Later, delete and other operations can be made against this.
 data-region | 'tokyo' | The Amazon AWS region in which recordings should be stored. Possible values are 'tokyo','useast1','dublin','sydney'
 data-localloader | '' | Ordinarily the iframe content is loaded from poodllloader.php on cloud.poodll.com. Specify the location of poodllloader.html on your site and cloud poodll will use this on iOS mobile safari. Mobile safari will block cam/mic access otherwise. Path is relative to data-parent entry. Be sure to use a preceding slash. Get poodllloader.html from [https://github.com/justinhunt/cloudpoodll](https://github.com/justinhunt/cloudpoodll)
+data-fallback | 'iosupload' | The fallback method in the case that the browser does not support the media recording type. Try 'iosupload','upload' or warning. 'warning' shows a brief message recommending the user use Google Chrome on PC. "upload" shows an upload area. If the device is a mobile the user can choose to record straight from the native recorder. "iosupload" shows the uploader on iOS and a warning otherwise.
 data-transcribevocab | none | Not implemented yet.
 data-notificationurl | none | Not implemented yet.
 
@@ -308,7 +309,7 @@ CloudPoodll.theCallback=function(thedata){
 
 Each of the [events](#events) described above returns a data payload to your callback function. The data contained in each event's data payload is explained in the table below.
 
-### awaitingconversion
+### awaitingprocessing
 
 Name | Description
 --------- | ---------
