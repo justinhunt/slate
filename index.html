@@ -520,9 +520,14 @@ The token request takes the following format: </p>
 <td>The Amazon AWS region in which recordings should be stored. Possible values are &#39;tokyo&#39;,&#39;useast1&#39;,&#39;dublin&#39;,&#39;sydney&#39;</td>
 </tr>
 <tr>
+<td>data-localloading</td>
+<td>&#39;auto&#39;</td>
+<td>Ordinarily the iframe content is loaded from poodllloader.php on cloud.poodll.com. If this is set to &#39;always&#39; and if data-localloader is set to a poodllloader file, the iframe will be loaded locally. Possible values are always,auto and never. auto will local load if browser is isOS or Safari. Those browsers will block cam/mic access otherwise.</td>
+</tr>
+<tr>
 <td>data-localloader</td>
 <td>&#39;&#39;</td>
-<td>Ordinarily the iframe content is loaded from poodllloader.php on cloud.poodll.com. Specify the location of poodllloader.html on your site and cloud poodll will use this on iOS mobile safari. Mobile safari will block cam/mic access otherwise. Path is relative to data-parent entry. Be sure to use a preceding slash. Get poodllloader.html from <a href="https://github.com/justinhunt/cloudpoodll">https://github.com/justinhunt/cloudpoodll</a></td>
+<td>Ordinarily the iframe content is loaded from poodllloader.php on cloud.poodll.com. Specify the location of poodllloader.html on your site and depending on data-localloading, cloud poodll will use this instead.  Path is relative to data-parent entry. Be sure to use a preceding slash. Get poodllloader.html from <a href="https://github.com/justinhunt/cloudpoodll">https://github.com/justinhunt/cloudpoodll</a></td>
 </tr>
 <tr>
 <td>data-fallback</td>
