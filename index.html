@@ -485,9 +485,14 @@ The token request takes the following format: </p>
 <td>If set to 1, Cloud Poodll will transcode audio to MP3 and video to MP4 for you. 1 means yes. 0 means no.</td>
 </tr>
 <tr>
+<td>data-transcoder</td>
+<td>&#39;default&#39;</td>
+<td>If set to &#39;default,&#39; Cloud Poodll will transcode audio and video using Elastic Transcoder. If set to FFMPEG it will use FFMPEG. This is slow and jobs that take more than 5 mins to process will fail. So only use FFMPEG when its appropriate(ie when the region is not supported by Elastic Transcoder and the media is short).</td>
+</tr>
+<tr>
 <td>data-transcribe</td>
 <td>0</td>
-<td>If set to 1, Cloud Poodll will transcribe the audio in the file to text. This will only work when the region is either useast1 or dublin. Other regions do not support transcription with Amazon. This process can take several minutes. Eventually notification that the process has finished will come to the notificationurl. But for now a text file containing the transcript will become available of the same filename as the recorded file with an extra &quot;.txt&quot; file extension.</td>
+<td>If set to 1, Cloud Poodll will transcribe the audio in the file to text. This will only work when the region is either useast1, dublin, sydney or ottawa. Other regions do not support transcription with Amazon. This process can take several minutes. Eventually notification that the process has finished will come to the notificationurl. But for now a text file containing the transcript will become available of the same filename as the recorded file with an extra &quot;.txt&quot; file extension.</td>
 </tr>
 <tr>
 <td>data-subtitle</td>
@@ -502,7 +507,7 @@ The token request takes the following format: </p>
 <tr>
 <td>data-language</td>
 <td>&#39;en-US&#39;</td>
-<td>If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. For (Amazon) transcription purposes, possible values are &quot;en-US&quot; and &quot;es-US&quot; (ie English or Spanish). For speech events from Google Chrome any of the language identifiers <a href="https://cloud.google.com/speech-to-text/docs/languages">here</a> will work.</td>
+<td>If Cloud Poodll is transcribing the audio in your file, we need to tell it the language. For (Amazon) transcription purposes, possible values are &quot;en-US&quot; &quot;en-UK&quot; &quot;en-AU&quot; &quot;fr-CA&quot; &quot;es-US&quot; . Transcription is only possible some regions. For speech events from Google Chrome any of the language identifiers <a href="https://cloud.google.com/speech-to-text/docs/languages">here</a> will work.</td>
 </tr>
 <tr>
 <td>data-expiredays</td>
@@ -517,7 +522,7 @@ The token request takes the following format: </p>
 <tr>
 <td>data-region</td>
 <td>&#39;tokyo&#39;</td>
-<td>The Amazon AWS region in which recordings should be stored. Possible values are &#39;tokyo&#39;,&#39;useast1&#39;,&#39;dublin&#39;,&#39;sydney&#39;</td>
+<td>The Amazon AWS region in which recordings should be stored. Regions supported by elastic transcoder are &#39;tokyo&#39;,&#39;useast1&#39;,&#39;dublin&#39;,&#39;sydney&#39;. Other regions are &#39;ottawa&#39;,&#39;london&#39;,&#39;saopaulo&#39;,&#39;frankfurt&#39;</td>
 </tr>
 <tr>
 <td>data-localloading</td>
